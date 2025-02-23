@@ -67,9 +67,8 @@ runs:
         fi
         sf project deploy start "${deployFlags[@]}" > run.json
         (jq -r '.result.id' run.json) > deployment-id.txt
-        cat deployment-id.txt
     - name: Resume Deployment
       shell: bash
       run: |
-        echo "::set-output name=deployment-id::$(cat deployment-id.txt)"
+        echo "DEPLOYMENT_ID=$(cat deployment-id.txt)" >> "$GITHUB_OUTPUT"
         sf project deploy resume -i $(cat deployment-id.txt)
