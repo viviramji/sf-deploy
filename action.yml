@@ -69,4 +69,4 @@ runs:
         sf project deploy start "${deployFlags[@]}" > run.json
         (jq -r '.result.id' run.json) > deployment-id.txt
         echo "::set-output name=deployment-id::$(deployment-id.txt)"
-        sf project deploy resume -i $(deployment-id.txt)
+        sf project deploy resume -i $(cat deployment-id.txt)
