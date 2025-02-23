@@ -63,7 +63,7 @@ runs:
         if [ "${{ inputs.DRY_RUN }}" = "true" ]; then
           deployFlags+=( --dry-run )
         fi
-        sf project deploy start "${deployFlags[@]}" > run.json
+        sf project deploy start "${deployFlags[@]}"
     - name: Resume Deployment
       shell: bash
       run: |
