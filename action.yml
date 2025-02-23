@@ -29,6 +29,9 @@ inputs:
     description: "The auth url tied to your deployment environment"
     type: string
     required: true
+  DEPLOYMENT_ID:
+    description: "The deployment id from a validation/ dry run."
+    type: string
 
 runs:
   using: "composite"
@@ -45,7 +48,7 @@ runs:
     - name: Generate package.xml
       shell: bash
       run: |
-        sf project generate manifest --source-dir ${{ inputs.SOURCE_DIRECTORY }} --output-dir manifest       
+        sf project generate manifest --source-dir ${{ inputs.SOURCE_DIRECTORY }} --output-dir manifest
     - name: Deploy to Environment
       shell: bash
       run: |
@@ -54,8 +57,16 @@ runs:
             --wait ${{ inputs.WAIT }}
             --test-level ${{ inputs.TEST_LEVEL }}
             --verbose
+            --async
+            --json
           )
         if [ "${{ inputs.DRY_RUN }}" = "true" ]; then
           deployFlags+=( --dry-run )
         fi
-        sf project deploy start "${deployFlags[@]}"
+        if [ -z "${{ inputs.DEPLOYMENT_ID }}" ]; then
+          deployFlags+=( --job-id ${{ inputs.DEPLOYMENT_ID }} )
+        fi
+        sf project deploy start "${deployFlags[@]}" > run.json
+        (jq -r '.result.id' run.json) > deployment-id.txt
+        echo "::set-output name=deployment-id::$(deployment-id.txt)"
+        sf project deploy resume -i $(deployment-id.txt)
