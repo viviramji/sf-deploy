@@ -49,7 +49,7 @@ runs:
       shell: bash
       run: |
         sf project generate manifest --source-dir ${{ inputs.SOURCE_DIRECTORY }} --output-dir manifest
-    - name: Deploy to Environment
+    - name: Start deployment
       shell: bash
       run: |
         deployFlags=(
@@ -68,5 +68,9 @@ runs:
         fi
         sf project deploy start "${deployFlags[@]}" > run.json
         (jq -r '.result.id' run.json) > deployment-id.txt
+        cat deployment-id.txt
+    - name: Resume Deployment
+      shell: bash
+      run: |
         echo "::set-output name=deployment-id::$(cat deployment-id.txt)"
         sf project deploy resume -i $(cat deployment-id.txt)
