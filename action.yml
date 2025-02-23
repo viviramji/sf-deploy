@@ -67,8 +67,8 @@ runs:
           deployFlags+=( --job-id ${{ inputs.DEPLOYMENT_ID }} )
         fi
         sf project deploy start "${deployFlags[@]}" > run.json
-        (jq -r '.result.id' run.json) > deployment-id.txt
-        cat deployment-id.txt
+        # (jq -r '.result.id' run.json) > deployment-id.txt
+        # cat deployment-id.txt
     - name: Resume Deployment
       shell: bash
       run: |
