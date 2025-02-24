@@ -32,9 +32,6 @@ inputs:
   DEPLOYMENT_ID:
     description: "The deployment id from a validation/ dry run."
     type: string
-  ENABLE_QUICK_DEPLOY:
-    description: "Use the validated package to deploy."
-    type: boolean
 
 runs:
   using: "composite"
@@ -65,7 +62,7 @@ runs:
         if [ "${{ inputs.DRY_RUN }}" = "true" ]; then
           deployFlags+=( --dry-run )
         fi
-        if [ -n "${{ inputs.DEPLOYMENT_ID }}" ] && [ "${{ inputs.ENABLE_QUICK_DEPLOY }}" = "true" ]; then
+        if [ -n "${{ inputs.DEPLOYMENT_ID }}" ] ]; then
           deployFlags+=( --job-id ${{ inputs.DEPLOYMENT_ID }} )
         fi
         sf project deploy start "${deployFlags[@]}" > run.json
