@@ -70,5 +70,4 @@ runs:
     - name: Resume Deployment
       shell: bash
       run: |
-        echo "DEPLOYMENT_ID=$(cat deployment-id.txt)" >> "$GITHUB_OUTPUT"
         sf project deploy resume -i $(cat deployment-id.txt) --wait ${{ inputs.WAIT }}
