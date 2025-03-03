@@ -62,7 +62,7 @@ runs:
         if [ "${{ inputs.DRY_RUN }}" = "true" ]; then
           deployFlags+=( --dry-run )
         fi
-        if [ -n "${{ inputs.DEPLOYMENT_ID }}" ] ]; then
+        if [ -n "${{ inputs.DEPLOYMENT_ID }}" ]; then
           deployFlags+=( --job-id ${{ inputs.DEPLOYMENT_ID }} )
         fi
         sf project deploy start "${deployFlags[@]}" > run.json
