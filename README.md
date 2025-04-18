@@ -29,6 +29,10 @@ SFDX_AUTH_URL:
   description: "The auth url tied to your deployment environment"
   type: string
   required: true
+TESTS:
+  description: "A comma-separated list of test classes to run when TEST_LEVEL is RunSpecifiedTests."
+  type: string
+  required: false
 ```
 
 ## Getting the SFDX Auth URL
