@@ -45,10 +45,10 @@ runs:
       shell: bash
       run: |
         sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ inputs.SFDX_AUTH_URL }}")
-    - name: Generate package.xml
-      shell: bash
-      run: |
-        sf project generate manifest --source-dir ${{ inputs.SOURCE_DIRECTORY }} --output-dir manifest       
+    
+    - name: Show manifest contents on the re-usuable action
+        run: cat manifest/package.xml
+
     - name: Deploy to Environment
       shell: bash
       run: |
