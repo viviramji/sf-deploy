@@ -61,7 +61,7 @@ runs:
         if [ "${{ inputs.TEST_LEVEL }}" = "RunSpecifiedTests" ] && [ -n "${{ inputs.TESTS }}" ]; then
           IFS=',' read -r -a tests <<< "${{ inputs.TESTS }}"
           for test in "${tests[@]}"; do
-            deployFlags+=( --test $test )
+            deployFlags+=( --tests $test )
           done
         fi
         if [ "${{ inputs.DRY_RUN }}" = "true" ]; then
