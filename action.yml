@@ -47,7 +47,7 @@ runs:
         sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ inputs.SFDX_AUTH_URL }}")
     
     - name: Confirm manifest file
-        run: cat manifest/package.xml
+      run: cat manifest/package.xml
 
     - name: Deploy to Environment
       shell: bash
