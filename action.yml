@@ -29,6 +29,9 @@ inputs:
     description: "The auth url tied to your deployment environment"
     type: string
     required: true
+  TESTS:
+    description: "A comma-separated list of test classes to run when TEST_LEVEL is RunSpecifiedTests."
+    type: string
 
 runs:
   using: "composite"
@@ -55,6 +58,12 @@ runs:
             --test-level ${{ inputs.TEST_LEVEL }}
             --verbose
           )
+        if [ "${{ inputs.TEST_LEVEL }}" = "RunSpecifiedTests" ] && [ -n "${{ inputs.TESTS }}" ]; then
+          IFS=',' read -r -a tests <<< "${{ inputs.TESTS }}"
+          for test in "${tests[@]}"; do
+            deployFlags+=( --tests $test )
+          done
+        fi
         if [ "${{ inputs.DRY_RUN }}" = "true" ]; then
           deployFlags+=( --dry-run )
         fi
