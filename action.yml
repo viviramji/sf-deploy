@@ -57,7 +57,7 @@ runs:
             --wait ${{ inputs.WAIT }}
             --test-level ${{ inputs.TEST_LEVEL }}
             --verbose
-          )git 
+          )
         if [ "${{ inputs.TEST_LEVEL }}" = "RunSpecifiedTests" ] && [ -n "${{ inputs.TESTS }}" ]; then
           IFS=',' read -r -a tests <<< "${{ inputs.TESTS }}"
           for test in "${tests[@]}"; do
