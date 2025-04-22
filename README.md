@@ -29,6 +29,9 @@ SFDX_AUTH_URL:
   description: "The auth url tied to your deployment environment"
   type: string
   required: true
+DEPLOYMENT_ID:
+  description: "The deployment id from a validation/ dry run."
+  type: string
 ```
 
 ## Getting the SFDX Auth URL

@@ -31,6 +31,8 @@ inputs:
     required: true
   TESTS:
     description: "A comma-separated list of test classes to run when TEST_LEVEL is RunSpecifiedTests."
+  DEPLOYMENT_ID:
+    description: "The deployment id from a validation/ dry run."
     type: string
 
 runs:
@@ -48,15 +50,16 @@ runs:
     - name: Generate package.xml
       shell: bash
       run: |
-        sf project generate manifest --source-dir ${{ inputs.SOURCE_DIRECTORY }} --output-dir manifest       
-    - name: Deploy to Environment
+        sf project generate manifest --source-dir ${{ inputs.SOURCE_DIRECTORY }} --output-dir manifest
+    - name: Start deployment
       shell: bash
       run: |
         deployFlags=(
             --manifest manifest/package.xml
-            --wait ${{ inputs.WAIT }}
             --test-level ${{ inputs.TEST_LEVEL }}
             --verbose
+            --async
+            --json
           )
         if [ "${{ inputs.TEST_LEVEL }}" = "RunSpecifiedTests" ] && [ -n "${{ inputs.TESTS }}" ]; then
           IFS=',' read -r -a tests <<< "${{ inputs.TESTS }}"
@@ -67,4 +70,12 @@ runs:
         if [ "${{ inputs.DRY_RUN }}" = "true" ]; then
           deployFlags+=( --dry-run )
         fi
-        sf project deploy start "${deployFlags[@]}"
+        if [ -n "${{ inputs.DEPLOYMENT_ID }}" ]; then
+          deployFlags+=( --job-id ${{ inputs.DEPLOYMENT_ID }} )
+        fi
+        sf project deploy start "${deployFlags[@]}" > run.json
+        (jq -r '.result.id' run.json) > deployment-id.txt
+    - name: Resume Deployment
+      shell: bash
+      run: |
+        sf project deploy resume -i $(cat deployment-id.txt) --wait ${{ inputs.WAIT }}
